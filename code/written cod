@@ -1,0 +1,111 @@
+static int q=1;
+void interrupt(){
+  if (INTF_bit==1){
+    INTF_bit=0;
+    if(q==1){
+    portd = 0b00000000;
+    portd.b1=1;
+    portd.b3=1;
+    delay_ms(3000);
+    portd.b1=0;
+    portd.b2=1;
+    q=~q;
+    }
+    else{
+    portd = 0b00000000;
+    portd.b4=1;
+    portd.b0=1;
+    delay_ms(3000);
+    portd.b4=0;
+    portd.b5=1;
+    q =~q;
+    }
+}
+}
+void main(){
+char i,j,x;
+char numlis1 [] = {0b00100011,0b00100010,0b00100001,0b00100000,0b00011001,0b00011000,0b00010111,0b00010110,0b00010101,0b00010100,0b00010011,
+0b00010010,0b00010001,0b000010000,0b00001001,0b00001000,0b00000111,0b00000110,0b00000101,0b00000100,0b00000011,0b00000010,0b00000001,0b00000000};
+char numlis2 [] ={0b00010101,0b00010100,0b00010011,0b00010010,0b00010001,0b000010000,0b00001001,0b00001000,0b00000111,0b00000110,0b00000101,0b00000100,0b00000011,0b00000010,0b00000001,0b00000000};
+char numlis3 [] ={0b00000011,0b00000010,0b00000001,0b00000000};
+adcon1 =0b0111;
+trisb = 0b00000000;
+trisc = 0b00000000;
+trisd = 0b00000000;
+trisa = 0b111111;
+portb = 0b00000000;
+portc = 0b00000000;
+portd = 0b00000000;
+for(;;){
+    while(porta.b0==0){
+          while(porta.b1==1){
+                      for (i=0;i<=23;i++){
+                              delay_ms(100);
+                              if(porta.b0==1||porta.b1==0){
+                              portc = 0b11111111;
+                              portd = 0b00000000;
+                              break;}
+                              portc = 0b00000000;
+                              portb = numlis1[i];
+                              delay_ms(500);
+                              portd.b4=0;
+                              portd.b1=0;
+                              portd.b2=0;
+                              portd.b0=1;
+                              if(i<20){
+                              portd.b3=0;
+                              portd.b5=1;
+                              }
+                              else{
+                              portd.b5=0;
+                              portd.b4=1;
+                              }
+                      }
+                      for (j=0;j<=15;j++){
+                              delay_ms(100);
+                              if(porta.b0==1||porta.b1==0){
+                              portc = 0b11111111;
+                              portd = 0b00000000;
+                              break;}
+                              portb = numlis2[j];
+                              delay_ms(500);
+                              portd.b4=0;
+                              portd.b3=1;
+                              if(j<3){
+                              portd.b0=0;
+                              portd.b1=1;
+                              }
+                              else{
+                              portd.b0=0;
+                              portd.b1=0;
+                              portd.b2=1;
+                              }
+                      }
+                      for (x=0;x<=3;x++){
+                              delay_ms(100);
+                              if(porta.b0==1||porta.b1==0){
+                              portc = 0b11111111;
+                              portd = 0b00000000;
+                              break;}
+                              portb = numlis3[x];
+                              delay_ms(500);
+                              portd.b3=0;
+                              portd.b2=0;
+                              portd.b4=1;
+                              portd.b1=1;
+                      }
+          }
+
+                      if (porta.b1==0){
+                         portb = 0b00000000;
+                         trisb.b0=1;
+                         gie_bit=1;
+                         inte_bit=1;
+                         intedg_bit=1;
+
+                      }
+          
+    }
+    
+}
+}
